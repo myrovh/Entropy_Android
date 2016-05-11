@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Entropy</string>
+    <string name="node_tags">Node Tags</string>
+    <string name="node_title">Node Title</string>
 </resources>
