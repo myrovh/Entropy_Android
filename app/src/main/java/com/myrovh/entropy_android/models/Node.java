@@ -25,6 +25,8 @@ public class Node {
         this.children = children;
     }
 
+    //TODO create static function that can generate children lists and current node items for use in adapters
+
     public String getTitle() {
         return title;
     }
