@@ -6,9 +6,14 @@ import android.widget.TextView;
 
 import com.mikepenz.fastadapter.items.AbstractItem;
 
-public class NodeChildAdapter extends AbstractItem<NodeChildAdapter, NodeChildAdapter.ViewHolder> {
+public class NodeChildItem extends AbstractItem<NodeChildItem, NodeChildItem.ViewHolder> {
     public String title;
     public String tags;
+
+    public NodeChildItem(String title, String tags) {
+        this.title = title;
+        this.tags = tags;
+    }
 
     @Override
     public int getType() {

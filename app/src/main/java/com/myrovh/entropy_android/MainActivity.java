@@ -32,9 +32,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Setup Document List
-        documentList.add(new Node("Test Node", "A test node with some text", "", "TEXT", new ArrayList<String>(), new ArrayList<Node>()));
+        int i = 0;
+        while (i < 50) {
+            ArrayList<String> tags = new ArrayList<>();
+            tags.add("Tag " + i);
+            tags.add("Tag " + i * 8);
+            Node tempN = new Node("Test Node " + i, "A test node with some text", "", "TEXT", tags, new ArrayList<Node>());
+            documentList.add(tempN);
+            i++;
+        }
 
-        //TODO recycler view for nodes
+        //Setup recycler view for nodes
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.node_document_view);
         FastItemAdapter fastAdapter = new FastItemAdapter();
         recyclerView.setAdapter(fastAdapter);
@@ -42,26 +50,28 @@ public class MainActivity extends AppCompatActivity {
         fastAdapter.add(CreateTestData());
 
         //TODO open node view on click
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<NodeChildAdapter>() {
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<NodeChildItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<NodeChildAdapter> adapter, NodeChildAdapter item, int position) {
+            public boolean onClick(View v, IAdapter<NodeChildItem> adapter, NodeChildItem item, int position) {
                 Toast.makeText(v.getContext(), (item).title, Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
     }
 
-    private ArrayList<NodeChildAdapter> CreateTestData() {
+    private ArrayList<NodeChildItem> CreateTestData() {
         //TODO generate actual nodes with children then build function to generate list for adapter to use
-        ArrayList<NodeChildAdapter> list = new ArrayList<>();
-        int i = 0;
-        while (i < 50) {
-            NodeChildAdapter test = new NodeChildAdapter();
-            test.title = "Title " + i;
-            test.tags = "Tag1, Tag2";
-            list.add(test);
-            i++;
+        //Generate recycler list from nodes
+        ArrayList<NodeChildItem> list = new ArrayList<>();
+        for (Node node : documentList) {
+            String tags = "";
+            ArrayList<String> tagList = node.getTags();
+            for (String string : tagList) {
+                tags += string + ", ";
+            }
+            list.add(new NodeChildItem(node.getTitle(), tags));
         }
+
         return list;
     }
 }
