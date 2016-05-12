@@ -1,10 +1,15 @@
 package com.myrovh.entropy_android.models;
 
+import com.myrovh.entropy_android.NodeChildItem;
+
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
+@Parcel
 public class Node {
-    public final String NODE_TEXT_TYPE = "TEXT";
-    public final String NODE_IMAGE_TYPE = "IMAGE";
+    public static final String NODE_TEXT_TYPE = "TEXT";
+    public static final String NODE_IMAGE_TYPE = "IMAGE";
 
     String title;
     String description;
@@ -26,6 +31,21 @@ public class Node {
     }
 
     //TODO create static function that can generate children lists and current node items for use in adapters
+
+    public static ArrayList<NodeChildItem> CreateNodeItemList(ArrayList<Node> nodes) {
+        //Generate recycler list from nodes
+        ArrayList<NodeChildItem> list = new ArrayList<>();
+        for (Node node : nodes) {
+            String tags = "";
+            ArrayList<String> tagList = node.getTags();
+            for (String string : tagList) {
+                tags += string + ", ";
+            }
+            list.add(new NodeChildItem(node.getTitle(), tags));
+        }
+
+        return list;
+    }
 
     public String getTitle() {
         return title;

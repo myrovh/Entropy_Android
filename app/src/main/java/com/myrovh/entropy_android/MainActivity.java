@@ -1,18 +1,20 @@
 package com.myrovh.entropy_android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.myrovh.entropy_android.models.Node;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -37,9 +39,14 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<String> tags = new ArrayList<>();
             tags.add("Tag " + i);
             tags.add("Tag " + i * 8);
-            Node tempN = new Node("Test Node " + i, "A test node with some text", "", "TEXT", tags, new ArrayList<Node>());
+            Node tempN = new Node("Test Node " + i, "A test node with some text", "", Node.NODE_TEXT_TYPE, tags, new ArrayList<Node>());
             documentList.add(tempN);
             i++;
+        }
+        for (Node node : documentList) {
+            ArrayList<String> tags = new ArrayList<>();
+            tags.add("Sub Tag");
+            node.addChild(new Node("Test Node " + i, "A test node with some text", "", Node.NODE_TEXT_TYPE, tags, new ArrayList<Node>()));
         }
 
         //Setup recycler view for nodes
@@ -47,31 +54,21 @@ public class MainActivity extends AppCompatActivity {
         FastItemAdapter fastAdapter = new FastItemAdapter();
         recyclerView.setAdapter(fastAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fastAdapter.add(CreateTestData());
+        fastAdapter.add(Node.CreateNodeItemList(documentList));
 
-        //TODO open node view on click
+        //Open node on click
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<NodeChildItem>() {
             @Override
             public boolean onClick(View v, IAdapter<NodeChildItem> adapter, NodeChildItem item, int position) {
-                Toast.makeText(v.getContext(), (item).title, Toast.LENGTH_SHORT).show();
+                OpenNode(position);
                 return false;
             }
         });
     }
 
-    private ArrayList<NodeChildItem> CreateTestData() {
-        //TODO generate actual nodes with children then build function to generate list for adapter to use
-        //Generate recycler list from nodes
-        ArrayList<NodeChildItem> list = new ArrayList<>();
-        for (Node node : documentList) {
-            String tags = "";
-            ArrayList<String> tagList = node.getTags();
-            for (String string : tagList) {
-                tags += string + ", ";
-            }
-            list.add(new NodeChildItem(node.getTitle(), tags));
-        }
-
-        return list;
+    private void OpenNode(int position) {
+        Intent i = new Intent(MainActivity.this, NodeActivity.class);
+        i.putExtra(NodeActivity.NODE_OBJECT_EXTRA, Parcels.wrap(documentList.get(position)));
+        startActivity(i);
     }
 }
