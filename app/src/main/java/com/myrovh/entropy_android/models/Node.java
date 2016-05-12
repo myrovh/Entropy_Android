@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Node {
     public static final String NODE_TEXT_TYPE = "TEXT";
     public static final String NODE_IMAGE_TYPE = "IMAGE";
+    public static final String NODE_LEVEL_EXTRA = "level";
 
     String title;
     String description;
