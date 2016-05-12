@@ -6,10 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
@@ -21,6 +24,7 @@ import org.parceler.Parcels;
 public class NodeActivity extends AppCompatActivity {
     public static final String NODE_OBJECT_EXTRA = "node";
     private Node currentNode;
+    private int nodeLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +36,16 @@ public class NodeActivity extends AppCompatActivity {
 
         //Get node data
         currentNode = Parcels.unwrap(getIntent().getParcelableExtra(NODE_OBJECT_EXTRA));
+        nodeLevel = getIntent().getIntExtra(Node.NODE_LEVEL_EXTRA, -1);
+        if (nodeLevel >= 0) {
+            nodeLevel++;
+        }
 
         //Setup Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(currentNode.getTitle());
+        getSupportActionBar().setTitle(currentNode.getTitle() + " Level " + nodeLevel);
 
         //Setup Views
         TextView tagText = (TextView) findViewById(R.id.node_tags_text);
@@ -66,12 +74,22 @@ public class NodeActivity extends AppCompatActivity {
     private void OpenChildNode(int position) {
         Intent i = new Intent(NodeActivity.this, NodeActivity.class);
         i.putExtra(NodeActivity.NODE_OBJECT_EXTRA, Parcels.wrap(currentNode.getChild(position)));
+        i.putExtra(Node.NODE_LEVEL_EXTRA, nodeLevel);
         startActivity(i);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_about:
+                new LibsBuilder().withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR).start(this);
+                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;

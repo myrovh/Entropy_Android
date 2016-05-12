@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private void OpenNode(int position) {
         Intent i = new Intent(MainActivity.this, NodeActivity.class);
         i.putExtra(NodeActivity.NODE_OBJECT_EXTRA, Parcels.wrap(documentList.get(position)));
+        i.putExtra(Node.NODE_LEVEL_EXTRA, 0);
         startActivity(i);
     }
 
