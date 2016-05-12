@@ -42,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
             Node tempN = new Node("Test Node " + i, "A test node with some text", "", Node.NODE_TEXT_TYPE, tags, new ArrayList<Node>());
             documentList.add(tempN);
             i++;
-        }
-        for (Node node : documentList) {
-            ArrayList<String> tags = new ArrayList<>();
-            tags.add("Sub Tag");
-            node.addChild(new Node("Test Node " + i, "A test node with some text", "", Node.NODE_TEXT_TYPE, tags, new ArrayList<Node>()));
+            for (Node node : documentList) {
+                ArrayList<String> subtags = new ArrayList<>();
+                subtags.add("Sub Tag");
+                node.addChild(new Node("Test Node " + i, "A test node with some text", "", Node.NODE_TEXT_TYPE, subtags, new ArrayList<Node>()));
+            }
         }
 
         //Setup recycler view for nodes

@@ -1,11 +1,18 @@
 package com.myrovh.entropy_android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.TextView;
 
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.myrovh.entropy_android.models.Node;
 
@@ -33,7 +40,33 @@ public class NodeActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(currentNode.getTitle());
 
         //Setup Views
-        Toast.makeText(this, currentNode.getTitle(), Toast.LENGTH_SHORT).show();
+        TextView tagText = (TextView) findViewById(R.id.node_tags_text);
+        TextView descriptionText = (TextView) findViewById(R.id.node_description_text);
+
+        tagText.setText(Node.CreateNodeTagString(currentNode.getTags()));
+        descriptionText.setText(currentNode.getDescription());
+
+        //Setup recycler view for children nodes
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.node_children_view);
+        FastItemAdapter fastAdapter = new FastItemAdapter();
+        recyclerView.setAdapter(fastAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        fastAdapter.add(Node.CreateNodeItemList(currentNode.getChildren()));
+
+        //Open node on click
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<NodeChildItem>() {
+            @Override
+            public boolean onClick(View v, IAdapter<NodeChildItem> adapter, NodeChildItem item, int position) {
+                OpenChildNode(position);
+                return false;
+            }
+        });
+    }
+
+    private void OpenChildNode(int position) {
+        Intent i = new Intent(NodeActivity.this, NodeActivity.class);
+        i.putExtra(NodeActivity.NODE_OBJECT_EXTRA, Parcels.wrap(currentNode.getChild(position)));
+        startActivity(i);
     }
 
     @Override

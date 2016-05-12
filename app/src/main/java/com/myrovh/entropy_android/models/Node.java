@@ -30,21 +30,23 @@ public class Node {
         this.children = children;
     }
 
-    //TODO create static function that can generate children lists and current node items for use in adapters
-
     public static ArrayList<NodeChildItem> CreateNodeItemList(ArrayList<Node> nodes) {
         //Generate recycler list from nodes
         ArrayList<NodeChildItem> list = new ArrayList<>();
         for (Node node : nodes) {
-            String tags = "";
-            ArrayList<String> tagList = node.getTags();
-            for (String string : tagList) {
-                tags += string + ", ";
-            }
+            String tags = CreateNodeTagString(node.getTags());
             list.add(new NodeChildItem(node.getTitle(), tags));
         }
 
         return list;
+    }
+
+    public static String CreateNodeTagString(ArrayList<String> tags) {
+        String s = "";
+        for (String string : tags) {
+            s += string + ", ";
+        }
+        return s;
     }
 
     public String getTitle() {

@@ -15,6 +15,24 @@
         android:minHeight="?attr/actionBarSize"
         app:titleTextColor="@android:color/white" />
 
+    <TextView
+        android:id="@+id/node_tags_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tags" />
+
+    <TextView
+        android:id="@+id/node_description_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description" />
+
+    <View
+        style="@style/Divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:paddingTop="24dp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/node_children_view"
         android:layout_width="match_parent"
