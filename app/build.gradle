@@ -10,7 +10,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "0.0r9"
     }
     buildTypes {
         release {
@@ -31,7 +31,12 @@ dependencies {
     compile('com.mikepenz:fastadapter:1.5.0@aar') {
         transitive = true
     }
+    compile('com.mikepenz:aboutlibraries:5.6.5@aar') {
+        transitive = true
+    }
     compile 'com.mikepenz:fastadapter-extensions:1.5.0@aar'
     compile 'org.parceler:parceler-api:1.1.2'
     apt 'org.parceler:parceler:1.1.2'
+    compile 'com.mikepenz:iconics-core:2.5.11@aar'
+    compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
 }
