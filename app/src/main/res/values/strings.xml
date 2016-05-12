@@ -3,4 +3,6 @@
     <string name="node_tags">Node Tags</string>
     <string name="node_title">Node Title</string>
     <string name="menu_about">About App</string>
+    <string name="tags_default_text">Tags</string>
+    <string name="description_default_text">Description</string>
 </resources>

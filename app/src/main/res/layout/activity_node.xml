@@ -10,22 +10,22 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <TextView
         android:id="@+id/node_tags_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tags" />
+        android:text="@string/tags_default_text" />
 
     <TextView
         android:id="@+id/node_description_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description" />
+        android:text="@string/description_default_text" />
 
     <View
         style="@style/Divider"

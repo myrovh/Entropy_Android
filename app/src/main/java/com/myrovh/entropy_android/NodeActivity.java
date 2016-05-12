@@ -60,6 +60,7 @@ public class NodeActivity extends AppCompatActivity {
         recyclerView.setAdapter(fastAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         fastAdapter.add(Node.CreateNodeItemList(currentNode.getChildren()));
+        //TODO show 'no children' empty list when adapter is empty
 
         //Open node on click
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<NodeChildItem>() {
@@ -88,7 +89,7 @@ public class NodeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_about:
-                new LibsBuilder().withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR).start(this);
+                new LibsBuilder().withFields(R.string.class.getFields()).withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR).start(this);
                 return true;
             case android.R.id.home:
                 onBackPressed();
