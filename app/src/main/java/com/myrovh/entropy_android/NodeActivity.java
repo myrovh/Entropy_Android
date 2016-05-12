@@ -98,4 +98,7 @@ public class NodeActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void AddChildNode(View view) {
+    }
 }
