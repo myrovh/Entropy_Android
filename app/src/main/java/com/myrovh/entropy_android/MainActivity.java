@@ -27,16 +27,16 @@ import com.myrovh.entropy_android.models.Node;
 
 import org.parceler.Parcels;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<Node> tempDocumentList = new ArrayList<>();
-    ArrayList<Node> documentList = new ArrayList<>();
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private ArrayList<Node> tempDocumentList = new ArrayList<>();
+    private ArrayList<Node> documentList = new ArrayList<>();
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private DocumentManager documentManager = new DocumentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,32 +51,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //TODO Document manager to load and save json files from storage location defined in settings
-        //  Dialogue to create new node
-        //  Feed new node into json into new file in internal storage
-        //  Scan internal storage and read root node to make adapter list of documents
-        //  Selecting an item will cause the json file to be passed into an acutal node object and then loaded into an activity
-
-        //TODO Document manager contains handeler to find and provide a list of ints allowing a node to update or create nodes
-
+        //TODO Dialogue to create new document
         //TODO node understands its position within a document and can send an update to the document or a new node
 
         //TODO recycler view with grid layout for tag chips
         //TODO custom styled text view to wrap each tag in
 
-        //Setup Test Files
-        File f = getFilesDir();
-        Log.d("Files", "Path: " + f.toString());
-        File file[] = f.listFiles();
+        //If no files create default file
+        ArrayList<String> filenames = documentManager.getFileList(this.getApplicationContext());
 
-        if (file != null && file.length > 0) {
-            Log.d("Files", "Size: " + file.length);
-            for (File aFile : file) {
-                Log.d("Files", "FileName:" + aFile.getName());
-            }
-        }
-
-        if (file != null && file.length < 2) {
+        if (filenames.size() < 1) {
             int i = 0;
             while (i < 5) {
                 ArrayList<String> tags = new ArrayList<>();
@@ -92,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            String filename = "test_node_1";
+            String filename = "test_node_1" + DocumentManager.FILE_EXTENSION;
             String string = gson.toJson(tempDocumentList.get(1));
             FileOutputStream outputStream;
 
@@ -108,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Load files into memory
-        if (file != null && file.length > 1) {
-            String filename = "test_node_1";
+        if (filenames.size() > 0) {
+            String filename = filenames.get(0);
             Node temp = new Node();
             FileInputStream inputStream;
             try {
