@@ -35,6 +35,7 @@ public class NodeActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //Get node data
+        //TODO track an arrayList of ints that represent where this node is located in the document
         currentNode = Parcels.unwrap(getIntent().getParcelableExtra(NODE_OBJECT_EXTRA));
         nodeLevel = getIntent().getIntExtra(Node.NODE_LEVEL_EXTRA, -1);
         if (nodeLevel >= 0) {
