@@ -8,14 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.fastadapter.FastAdapter;
@@ -27,9 +25,7 @@ import com.myrovh.entropy_android.models.Node;
 
 import org.parceler.Parcels;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         //If no files create default file
         ArrayList<String> filenames = documentManager.getFileList(this.getApplicationContext());
-
         if (filenames.size() < 1) {
             int i = 0;
             while (i < 5) {
@@ -79,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
             String filename = "test_node_1" + DocumentManager.FILE_EXTENSION;
             String string = gson.toJson(tempDocumentList.get(1));
             FileOutputStream outputStream;
-
             try {
                 outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
                 outputStream.write(string.getBytes());
@@ -87,23 +81,12 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            Log.d("GSON", string);
         }
 
         //Load files into memory
+        filenames = documentManager.getFileList(this.getApplicationContext());
         if (filenames.size() > 0) {
-            String filename = filenames.get(0);
-            Node temp = new Node();
-            FileInputStream inputStream;
-            try {
-                inputStream = openFileInput(filename);
-                JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-                temp = gson.fromJson(reader, Node.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            documentList.add(temp);
+            documentList = documentManager.getSavedDocuments(this.getApplicationContext());
         }
 
         //Setup recycler view for nodes

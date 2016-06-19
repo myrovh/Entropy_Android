@@ -1,15 +1,21 @@
 package com.myrovh.entropy_android;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import com.myrovh.entropy_android.models.Node;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 class DocumentManager {
-    public static final String FILE_EXTENSION = ".node";
+    static final String FILE_EXTENSION = ".node";
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
     //TODO Document manager to load and save json files from storage location defined in settings
     //  Feed new node into json into new file in internal storage
     //  Scan internal storage and read root node to make adapter list of documents
@@ -20,11 +26,11 @@ class DocumentManager {
     DocumentManager() {
     }
 
+    //Returns array of strings with the filenames (not absolute path) to all valid saved documents
     ArrayList<String> getFileList(Context context) {
         ArrayList<String> filenames = new ArrayList<>();
 
         File filesDir = context.getFilesDir();
-        Log.d("Files", "Path: " + filesDir.toString());
         File[] files = filesDir.listFiles();
 
         for (File file : files) {
@@ -35,8 +41,22 @@ class DocumentManager {
         return filenames;
     }
 
-    ArrayList<Node> getSavedDocuments() {
+    //Load every file in internal memory with the correct FILE_EXTENSION into an arraylist
+    ArrayList<Node> getSavedDocuments(Context context) {
         ArrayList<Node> documents = new ArrayList<>();
+        ArrayList<String> filenames = getFileList(context);
+
+        for (String filename : filenames) {
+            Node temp;
+            try {
+                FileInputStream in = context.openFileInput(filename);
+                JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+                temp = gson.fromJson(reader, Node.class);
+                documents.add(temp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return documents;
     }
