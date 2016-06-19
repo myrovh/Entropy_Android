@@ -9,6 +9,7 @@ import com.myrovh.entropy_android.models.Node;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -53,11 +54,29 @@ class DocumentManager {
                 JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
                 temp = gson.fromJson(reader, Node.class);
                 documents.add(temp);
+                in.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         return documents;
+    }
+
+    //Write filename to internal storage
+    void saveDocument(Context context, Node document) {
+        //TODO account for more invalid filename characters
+        String filename = document.getTitle().replace(" ", "_").toLowerCase() + DocumentManager.FILE_EXTENSION;
+        String json = gson.toJson(document);
+
+        FileOutputStream out;
+        try {
+            out = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            out.write(json.getBytes());
+            out.close();
+        } catch (Exception e) {
+            //TODO correct error reporting
+            e.printStackTrace();
+        }
     }
 }

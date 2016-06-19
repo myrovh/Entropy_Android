@@ -1,6 +1,5 @@
 package com.myrovh.entropy_android;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
@@ -25,7 +24,6 @@ import com.myrovh.entropy_android.models.Node;
 
 import org.parceler.Parcels;
 
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -71,15 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            String filename = "test_node_1" + DocumentManager.FILE_EXTENSION;
-            String string = gson.toJson(tempDocumentList.get(1));
-            FileOutputStream outputStream;
-            try {
-                outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-                outputStream.write(string.getBytes());
-                outputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            //Save the generated test data to files
+            for (Node document : tempDocumentList) {
+                documentManager.saveDocument(this.getApplicationContext(), document);
             }
         }
 
