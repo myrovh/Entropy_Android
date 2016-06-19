@@ -11,8 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.fastadapter.FastAdapter;
@@ -27,10 +25,6 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private ArrayList<Node> tempDocumentList = new ArrayList<>();
-    private ArrayList<Node> documentList = new ArrayList<>();
-    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private DocumentManager documentManager = new DocumentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +45,10 @@ public class MainActivity extends AppCompatActivity {
         //TODO recycler view with grid layout for tag chips
         //TODO custom styled text view to wrap each tag in
 
-        //If no files create default file
-        ArrayList<String> filenames = documentManager.getFileList(this.getApplicationContext());
+        //If no files create default files
+        ArrayList<String> filenames = DocumentManager.getInstance().getFileList(this.getApplicationContext());
         if (filenames.size() < 1) {
+            ArrayList<Node> tempDocumentList = new ArrayList<>();
             int i = 0;
             while (i < 5) {
                 ArrayList<String> tags = new ArrayList<>();
@@ -71,22 +66,19 @@ public class MainActivity extends AppCompatActivity {
 
             //Save the generated test data to files
             for (Node document : tempDocumentList) {
-                documentManager.saveDocument(this.getApplicationContext(), document);
+                DocumentManager.getInstance().saveDocument(this.getApplicationContext(), document);
             }
         }
 
         //Load files into memory
-        filenames = documentManager.getFileList(this.getApplicationContext());
-        if (filenames.size() > 0) {
-            documentList = documentManager.getSavedDocuments(this.getApplicationContext());
-        }
+        DocumentManager.getInstance().loadDocumentsIntoMemory(this.getApplicationContext());
 
         //Setup recycler view for nodes
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.node_document_view);
         FastItemAdapter fastAdapter = new FastItemAdapter();
         recyclerView.setAdapter(fastAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fastAdapter.add(Node.CreateNodeItemList(documentList));
+        fastAdapter.add(Node.CreateNodeItemList(DocumentManager.getInstance().documents));
 
         //Open node on click
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<NodeChildItem>() {
@@ -100,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void OpenNode(int position) {
         Intent i = new Intent(MainActivity.this, NodeActivity.class);
-        i.putExtra(NodeActivity.NODE_OBJECT_EXTRA, Parcels.wrap(documentList.get(position)));
+        i.putExtra(NodeActivity.NODE_OBJECT_EXTRA, Parcels.wrap(DocumentManager.getInstance().documents.get(position)));
         i.putExtra(Node.NODE_LEVEL_EXTRA, 0);
         startActivity(i);
     }

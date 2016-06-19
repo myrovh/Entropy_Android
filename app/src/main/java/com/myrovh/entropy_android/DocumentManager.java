@@ -14,7 +14,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 class DocumentManager {
-    static final String FILE_EXTENSION = ".node";
+    private static final String FILE_EXTENSION = ".node";
+    ArrayList<Node> documents = new ArrayList<>();
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     //TODO Document manager to load and save json files from storage location defined in settings
@@ -24,7 +25,11 @@ class DocumentManager {
 
     //TODO Document manager contains handler to find and provide a list of ints allowing a node to update or create nodes
 
-    DocumentManager() {
+    private DocumentManager() {
+    }
+
+    static DocumentManager getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     //Returns array of strings with the filenames (not absolute path) to all valid saved documents
@@ -43,7 +48,7 @@ class DocumentManager {
     }
 
     //Load every file in internal memory with the correct FILE_EXTENSION into an arraylist
-    ArrayList<Node> getSavedDocuments(Context context) {
+    private ArrayList<Node> getSavedDocuments(Context context) {
         ArrayList<Node> documents = new ArrayList<>();
         ArrayList<String> filenames = getFileList(context);
 
@@ -63,10 +68,14 @@ class DocumentManager {
         return documents;
     }
 
+    private String getDocumentFilename(String title) {
+        return title.replace(" ", "_").toLowerCase() + DocumentManager.FILE_EXTENSION;
+    }
+
     //Write filename to internal storage
     void saveDocument(Context context, Node document) {
         //TODO account for more invalid filename characters
-        String filename = document.getTitle().replace(" ", "_").toLowerCase() + DocumentManager.FILE_EXTENSION;
+        String filename = getDocumentFilename(document.getTitle());
         String json = gson.toJson(document);
 
         FileOutputStream out;
@@ -78,5 +87,13 @@ class DocumentManager {
             //TODO correct error reporting
             e.printStackTrace();
         }
+    }
+
+    void loadDocumentsIntoMemory(Context context) {
+        documents = getSavedDocuments(context);
+    }
+
+    private static class SingletonHolder {
+        private static final DocumentManager INSTANCE = new DocumentManager();
     }
 }
